@@ -1,0 +1,48 @@
+# Copyright (c) 2024 Microsoft Corporation.
+# Licensed under the MIT License
+
+"""The EmbeddingsLLM class."""
+
+from typing_extensions import Unpack
+
+from graphrag.llm.base import BaseLLM
+from graphrag.llm.types import (
+    EmbeddingInput,
+    EmbeddingOutput,
+    LLMInput,
+)
+
+from .openai_configuration import OpenAIConfiguration
+from .types import OpenAIClientTypes
+from openai import OpenAI  # LM Studio OpenAI 
+
+class OpenAIEmbeddingsLLM(BaseLLM[EmbeddingInput, EmbeddingOutput]):
+    """A text-embedding generator LLM."""
+
+    _client: OpenAIClientTypes
+    _configuration: OpenAIConfiguration
+
+    def __init__(self, client: OpenAIClientTypes, configuration: OpenAIConfiguration):
+        self._client = client
+        self._configuration = configuration
+
+        print("openaid_embeddings_llm embedding model:", self._configuration.model)
+
+        # Initialize LM Studio OpenAI
+        self.lmstudio_client = OpenAI(base_url=self._configuration.api_base, api_key=self._configuration.api_key)
+
+    async def _execute_llm(
+        self, input: EmbeddingInput, **kwargs: Unpack[LLMInput]
+    ) -> EmbeddingOutput | None:
+        args = {
+            "model": self._configuration.model,
+            **(kwargs.get("model_parameters") or {}),
+        }
+        
+        # LM Studio for embedding
+        embedding_list = []
+        for inp in input:
+            embedding = self.lmstudio_client.embeddings.create(input=[inp], model=self._configuration.model)
+            embedding_list.append(embedding.data[0].embedding)
+        
+        return embedding_list

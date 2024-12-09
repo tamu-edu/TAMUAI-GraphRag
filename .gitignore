@@ -1,0 +1,37 @@
+# Project specific
+Graphrag/BuildGR/settings.yaml
+Graphrag/BuildGR/prompts/
+Graphrag/BuildGR/GR-Knowledge/
+Graphrag/BuildGR/cache/
+Graphrag/BuildGR/output/
+Graphrag/BuildGR/data/*
+!Graphrag/BuildGR/data/.gitkeep
+Graphrag/BuildGR/input/*
+!Graphrag/BuildGR/input/.gitkeep
+
+# Python
+__pycache__/
+*.py[cod]
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Environment
+.env
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# System
+.DS_Store
+
+# Build
+poetry.lock
